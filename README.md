@@ -1,4 +1,4 @@
-# **mohituQ**
+# **mohituQ** **محيطك**
 
 Quantum Optimization for Ocean Plastic Cleanup
 mohituQ is an open-source project focused on leveraging quantum algorithms-specifically Decoded Quantum Interferometry (DQI)-to optimize the placement and routing of trash-collection systems for cleaning up ocean plastic. Inspired by initiatives like The Ocean Cleanup, Plastic Odyssey, and WWF Oceans, this repository aims to accelerate environmental impact through advanced computational techniques.
