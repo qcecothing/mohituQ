@@ -1,0 +1,49 @@
+/* Custom styles for mohituQ documentation */
+
+/* Logo styling */
+.wy-side-nav-search {
+    background-color: #3179B9;
+}
+
+.wy-side-nav-search > a img.logo {
+    width: 200px;
+    padding: 10px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Arabic text styling (for multilingual elements) */
+.arabic {
+    font-family: "Arial", sans-serif;
+    direction: rtl;
+}
+
+/* Main content styling */
+.wy-nav-content {
+    max-width: 1000px;
+}
+
+/* Custom admonition for environmental facts */
+div.admonition-ocean-fact {
+    background-color: #e7f4f9;
+    border-left-color: #3179B9;
+}
+
+div.admonition-ocean-fact .admonition-title {
+    background-color: #3179B9;
+}
+
+/* Make headers more prominent */
+h1, h2, h3 {
+    color: #3179B9;
+}
+
+/* Style footer */
+footer {
+    font-size: 0.9em;
+}
+
+/* Style code blocks */
+div[class^='highlight'] {
+    border-radius: 4px;
+} 
