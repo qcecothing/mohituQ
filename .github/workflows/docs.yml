@@ -29,6 +29,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install sphinx sphinx-rtd-theme
 
+      - name: Create logo placeholder
+        run: |
+          mkdir -p docs/source/_static/images
+          # Try to install ImageMagick if not available
+          sudo apt-get update && sudo apt-get install -y imagemagick || true
+          # Create blue background with text - simple logo
+          convert -size 200x100 xc:#3179B9 -fill white -gravity center -font Arial -pointsize 24 -annotate 0 "mohituQ" docs/source/_static/images/mohituq_logo.png || echo "Could not create logo with ImageMagick, creating empty file" && touch docs/source/_static/images/mohituq_logo.png
+
       - name: Build documentation
         run: |
           cd docs
@@ -39,4 +47,11 @@ jobs:
         with:
           folder: docs/build/html
           branch: gh-pages
-          clean: true 
+          clean: true
+          
+      - name: Update Pages settings
+        run: |
+          echo "For manual configuration, please ensure GitHub Pages settings are:"
+          echo "- Source: Deploy from a branch"
+          echo "- Branch: gh-pages with / (root) folder"
+          echo "The site should be available at: https://qcecothing.github.io/mohituQ/" 

@@ -12,7 +12,15 @@ To build the documentation locally:
 pip install sphinx sphinx-rtd-theme
 ```
 
-2. Build the HTML documentation:
+2. Create the logo image (optional, a placeholder will be used if not created):
+
+```bash
+# If you have ImageMagick installed:
+mkdir -p source/_static/images
+convert -size 200x100 xc:#3179B9 -fill white -gravity center -font Arial -pointsize 24 -annotate 0 "mohituQ" source/_static/images/mohituq_logo.png
+```
+
+3. Build the HTML documentation:
 
 ```bash
 cd docs
@@ -21,16 +29,25 @@ make html
 
 The built documentation will be available in the `build/html` directory. Open `build/html/index.html` in your browser to view it.
 
+## Troubleshooting
+
+If you encounter any issues with the documentation:
+
+- Make sure all paths in the configuration are correct
+- Check that the logo file exists at `source/_static/images/mohituq_logo.png`
+- Verify that all RST files are properly formatted
+- Clear the build directory (`rm -rf build`) and rebuild if necessary
+
 ## Deploying to GitHub Pages
 
-To deploy the documentation to GitHub Pages:
+The documentation is automatically deployed to GitHub Pages via a GitHub Action workflow when changes are pushed to the main branch.
 
-1. Build the documentation as described above
-2. Copy the contents of the `build/html` directory to the `gh-pages` branch of your repository
-
-You can automate this with a GitHub Action by adding a workflow file to your repository.
+The published documentation will be available at:
+https://qcecothing.github.io/mohituQ/
 
 ## Documentation Structure
+
+The documentation follows this structure:
 
 - `source/`: Contains the source reStructuredText files
 - `source/_static/`: Contains static files (CSS, JS, images)
@@ -48,6 +65,8 @@ To add new documentation:
 
 ## Updating the Logo
 
-The project logo is stored in `source/_static/images/mohituq_logo.png`. To update it, replace this file with your new logo.
+The project logo is stored in `source/_static/images/mohituq_logo.png`. To update it, replace this file with your new logo. 
+
+The ideal dimensions for the logo are 200x100 pixels with a blue (#3179B9) background.
 
 For RTL (Arabic) text support, we use custom CSS and JavaScript in the `_static` directory. 
