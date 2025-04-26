@@ -21,4 +21,25 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   
   processNode(document.body);
+  
+  // Remove duplicate navigation entries
+  const navItems = document.querySelectorAll('.wy-menu-vertical li.toctree-l1');
+  const seen = new Set();
+  
+  navItems.forEach(item => {
+    const text = item.textContent.trim();
+    if (seen.has(text)) {
+      item.style.display = 'none';
+    } else {
+      seen.add(text);
+    }
+  });
+  
+  // Improve mobile navigation
+  const mobileMenu = document.querySelector('.wy-nav-top');
+  if (mobileMenu) {
+    mobileMenu.addEventListener('click', function() {
+      document.body.classList.toggle('wy-nav-content-wrap');
+    });
+  }
 }); 

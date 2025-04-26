@@ -6,16 +6,32 @@
 mohituQ | محيطك
 ===============
 
+.. image:: https://img.shields.io/github/license/qcecothing/mohituQ.svg?style=flat-square
+   :target: https://github.com/qcecothing/mohituQ/blob/main/LICENSE
+   :alt: License
+   :class: license-badge
+
 *Quantum Optimization for Ocean Plastic Cleanup*
 
-.. image:: https://img.shields.io/github/license/ecothing/mohituQ.svg?style=flat-square
-   :target: https://github.com/ecothing/mohituQ/blob/main/LICENSE
-   :alt: License
+Overview
+--------
 
 mohituQ is an open-source project focused on leveraging quantum algorithms-specifically Decoded Quantum Interferometry (DQI)-to optimize the placement and routing of trash-collection systems for cleaning up ocean plastic. Inspired by initiatives like The Ocean Cleanup, Plastic Odyssey, and WWF Oceans, this repository aims to accelerate environmental impact through advanced computational techniques.
 
 .. note::
    The name "محيطك" (mohituQ) means "Your Ocean" in Arabic, reflecting our commitment to empowering communities to reclaim their marine environments through advanced technology.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   :hidden:
+   
+   overview
+   installation
+   usage
+   documentation/index
+   contributing
+   acknowledgments
 
 Project Goals
 ------------
@@ -32,34 +48,27 @@ Features
 * Tools for simulating ocean plastic distribution and evaluating cleanup strategies
 * Extensible framework for integrating real-world data and collaborating with citizen science initiatives
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-   
-   installation
-   usage
-   documentation/index
-   contributing
-   acknowledgments
+Quick Start
+----------
 
 Installation
------------
+^^^^^^^^^^^
 
 .. code-block:: bash
 
    # Clone this repository
-   git clone https://github.com/ecothing/mohituQ.git
+   git clone https://github.com/qcecothing/mohituQ.git
    cd mohituQ
 
-   # (Optional) Create and activate a virtual environment
+   # Create and activate a virtual environment
    python3 -m venv venv
    source venv/bin/activate
 
    # Install dependencies
    pip install -r requirements.txt
 
-Usage
------
+Basic Usage
+^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -69,7 +78,28 @@ Usage
    # Visualize results
    python visualize.py --input results/sample_output.json
 
-See the examples directory for more use cases and sample scripts.
+UN Sustainable Development Goals
+-------------------------------
+
+This project contributes to the following United Nations Sustainable Development Goals:
+
+.. container:: sdg-item
+
+   **SDG 13 - Climate Action**
+   
+   By optimizing ocean cleanup operations to reduce fuel consumption and emissions while maximizing impact.
+
+.. container:: sdg-item
+
+   **SDG 14 - Life Below Water**
+   
+   By directly addressing ocean plastic pollution that threatens marine ecosystems and biodiversity.
+
+.. container:: sdg-item
+
+   **SDG 17 - Partnerships for Goals**
+   
+   By fostering open collaboration between quantum computing experts, marine conservationists, and the global community.
 
 Contributing
 -----------
@@ -85,7 +115,7 @@ Acknowledgments
 License
 -------
 
-This project is licensed under the MIT License. See `LICENSE <https://github.com/ecothing/mohituQ/blob/main/LICENSE>`_ for details.
+This project is licensed under the MIT License. See `LICENSE <https://github.com/qcecothing/mohituQ/blob/main/LICENSE>`_ for details.
 
 |
 

@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'mohituQ'
-copyright = '2025, ecothing'
-author = 'ecothing'
+copyright = '2025, qcecothing'
+author = 'qcecothing'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
@@ -41,30 +41,31 @@ html_favicon = '_static/images/mohituq_logo.png'
 html_theme_options = {
     'logo_only': True,  # Display only the logo
     'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
-    'style_nav_header_background': '#3179B9',  # Match logo blue background
-    # Toc options
-    'collapse_navigation': True,
-    'sticky_navigation': True,
     'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'style_nav_header_background': '#3179B9',  # Match logo blue background
 }
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-
-# Custom CSS for styling
+# Add any paths that contain custom static files (such as style sheets) here
 html_css_files = [
     'css/custom.css',
 ]
 
-# Custom JavaScript
+# Add any paths that contain custom JavaScript files
 html_js_files = [
     'js/custom.js',
 ]
+
+# Full sidebar
+html_sidebars = {
+    '**': [
+        'globaltoc.html',
+        'relations.html',
+        'sourcelink.html',
+        'searchbox.html',
+    ]
+}
 
 # External links
 intersphinx_mapping = {
