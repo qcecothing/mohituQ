@@ -1,0 +1,47 @@
+{
+  "name": "nyuad25",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.0.0-alpha.8",
+    "@tabler/icons-react": "^3.31.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.503.0",
+    "motion": "^12.9.2",
+    "next": "15.3.1",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-leaflet": "^5.0.0",
+    "simplex-noise": "^4.0.3",
+    "tailwind-merge": "^2.5.5",
+    "three": "^0.176.0",
+    "tw-animate-css": "^1.2.8",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.17",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.176.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "motion": {
+      "react": "19.0.0-rc-66855b96-20241106",
+      "react-dom": "19.0.0-rc-66855b96-20241106"
+    }
+  }
+}
