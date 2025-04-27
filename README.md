@@ -41,6 +41,7 @@ python visualize.py --input results/sample_output.json
 See the examples directory for more use cases and sample scripts.
 
 📖 Documentation
+
 **Full documentation:** https://qcecothing.github.io/mohituQ/
 
 docs/overview.md: Project overview and algorithmic background
@@ -58,7 +59,7 @@ If you discover a security vulnerability, please see SECURITY.md for instruction
 🌍 **Acknowledgments:**
 Inspired by The Ocean Cleanup, Plastic Odyssey, and WWF Oceans
 
-**Quantum algorithm references:** Decoded Quantum Interferometry (DQI), QAOA
+⚛️ **Quantum algorithm references:** [Decoded Quantum Interferometry (DQI)](https://arxiv.org/abs/2408.08292), [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/2306.09198)
 
 🌏 UN Sustainable Development Goals
 This project contributes to the following United Nations Sustainable Development Goals:
@@ -70,7 +71,7 @@ This project contributes to the following United Nations Sustainable Development
 - **SDG 14 - Life Below Water**: By directly addressing ocean plastic pollution that threatens marine ecosystems and biodiversity.
 - **SDG 17 - Partnerships for Goals**: By fostering open collaboration between quantum computing experts, marine conservationists, and the global community.
 
-📢 License
+📢 **License:**
 This project is licensed under the MIT License. See LICENSE for details.
 
 Let's use open source and quantum computing to help restore our oceans!
