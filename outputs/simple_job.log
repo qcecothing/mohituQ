@@ -1,9 +1,0 @@
-Generating mock results...
-Exporting results to files...
-
-Best solution: 000101
-
-Files exported:
-- JSON: outputs/results_20250427_041907.json
-- CSV: outputs/results_20250427_041907.csv
-- PLOT: outputs/histogram_20250427_041907.png
