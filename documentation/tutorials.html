@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; mohituQ Documentation</title>
+  <title>Tutorials &mdash; mohituQ Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c9ce4e5c" />
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DQI API" href="api/dqi.html" />
-    <link rel="prev" title="Decoded Quantum Interferometry (DQI)" href="dqi.html" /> 
+    <link rel="next" title="Advanced Topics" href="advanced.html" />
+    <link rel="prev" title="Export Utilities API" href="api/export.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -100,7 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="dqi.html#next-steps">Next Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/dqi.html">DQI API</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api/dqi.html#decoded-quantum-interferometry-dqi-module">Decoded Quantum Interferometry (DQI) Module</a></li>
 </ul>
@@ -113,15 +113,15 @@
 <li class="toctree-l4"><a class="reference internal" href="api/export.html#simplified-xorsat-export-module">Simplified XORSAT Export Module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#core-modules">Core Modules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#utility-modules">Utility Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#core-modules">Core Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#utility-modules">Utility Modules</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials.html#basic-tutorial">Basic Tutorial</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials.html#advanced-tutorial">Advanced Tutorial</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials.html#interactive-examples">Interactive Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-tutorial">Basic Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-tutorial">Advanced Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interactive-examples">Interactive Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="advanced.html">Advanced Topics</a><ul>
@@ -202,9 +202,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Documentation</a></li>
-      <li class="breadcrumb-item active">API Reference</li>
+      <li class="breadcrumb-item active">Tutorials</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/documentation/api.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/documentation/tutorials.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -212,39 +212,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
-<p>This section provides detailed documentation of the mohituQ API.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api/dqi.html">DQI API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/dqi.html#decoded-quantum-interferometry-dqi-module">Decoded Quantum Interferometry (DQI) Module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/optimization.html">Optimization API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/optimization.html#quantum-approximate-optimization-algorithm-qaoa">Quantum Approximate Optimization Algorithm (QAOA)</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/export.html">Export Utilities API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/export.html#simplified-xorsat-export-module">Simplified XORSAT Export Module</a></li>
-</ul>
-</li>
-</ul>
+  <section id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading"></a></h1>
+<p>This section provides step-by-step guides for common use cases of the mohituQ library.</p>
+<section id="basic-tutorial">
+<h2>Basic Tutorial<a class="headerlink" href="#basic-tutorial" title="Link to this heading"></a></h2>
+<p>This tutorial demonstrates how to use the mohituQ library for a simple optimization problem.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mohituq</span>
+
+<span class="c1"># Initialize the optimizer</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">mohituq</span><span class="o">.</span><span class="n">DQI</span><span class="p">()</span>
+
+<span class="c1"># Prepare input data</span>
+<span class="n">problem_matrix</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="c1"># Run optimization</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">problem_matrix</span><span class="p">)</span>
+
+<span class="c1"># Print results</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal solution: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;solution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solution quality: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;quality&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
 </div>
-<section id="core-modules">
-<h2>Core Modules<a class="headerlink" href="#core-modules" title="Link to this heading"></a></h2>
-<p>The core modules provide the fundamental quantum algorithms and implementations used in the mohituQ project:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="api/dqi.html"><span class="doc">DQI API</span></a> - Documentation for the DQI (Decoded Quantum Interferometry) implementation</p></li>
-<li><p><a class="reference internal" href="api/optimization.html"><span class="doc">Optimization API</span></a> - Documentation for optimization algorithms like QAOA</p></li>
-</ul>
 </section>
-<section id="utility-modules">
-<h2>Utility Modules<a class="headerlink" href="#utility-modules" title="Link to this heading"></a></h2>
-<p>The utility modules provide supporting functionality for the core algorithms:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="api/export.html"><span class="doc">Export Utilities API</span></a> - Documentation for result export and visualization utilities</p></li>
-</ul>
+<section id="advanced-tutorial">
+<h2>Advanced Tutorial<a class="headerlink" href="#advanced-tutorial" title="Link to this heading"></a></h2>
+<p>For more complex scenarios and advanced features, see the <a class="reference internal" href="advanced.html"><span class="doc">Advanced Topics</span></a> section.</p>
+</section>
+<section id="interactive-examples">
+<h2>Interactive Examples<a class="headerlink" href="#interactive-examples" title="Link to this heading"></a></h2>
+<p>For interactive examples, refer to the Jupyter notebooks in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory of the repository.</p>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>Once you’re comfortable with the basics, explore the <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a> documentation for a complete reference of available functions and classes.</p>
 </section>
 </section>
 
@@ -252,8 +258,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="dqi.html" class="btn btn-neutral float-left" title="Decoded Quantum Interferometry (DQI)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api/dqi.html" class="btn btn-neutral float-right" title="DQI API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="api/export.html" class="btn btn-neutral float-left" title="Export Utilities API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advanced.html" class="btn btn-neutral float-right" title="Advanced Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

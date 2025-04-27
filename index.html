@@ -117,6 +117,21 @@
 <li class="toctree-l3"><a class="reference internal" href="documentation/api.html#utility-modules">Utility Modules</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/tutorials.html">Tutorials</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="documentation/tutorials.html#basic-tutorial">Basic Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/tutorials.html#advanced-tutorial">Advanced Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/tutorials.html#interactive-examples">Interactive Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/tutorials.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/advanced.html">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="documentation/advanced.html#customizing-optimization-objectives">Customizing Optimization Objectives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/advanced.html#implementing-new-algorithms">Implementing New Algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/advanced.html#integration-with-external-data-sources">Integration with External Data Sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/advanced.html#performance-optimization">Performance Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documentation/advanced.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="documentation/index.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation/index.html#decoded-quantum-interferometry">Decoded Quantum Interferometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="documentation/index.html#api-reference">API Reference</a></li>
@@ -247,10 +262,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <section id="basic-usage">
 <h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run a sample optimization</span>
-python<span class="w"> </span>run_optimization.py<span class="w"> </span>--config<span class="w"> </span>configs/sample_config.yaml
-
-<span class="c1"># Visualize results</span>
-python<span class="w"> </span>visualize.py<span class="w"> </span>--input<span class="w"> </span>results/sample_output.json
+python<span class="w"> </span>src/dqi_max_xorsat_implementation.py
 </pre></div>
 </div>
 </section>
