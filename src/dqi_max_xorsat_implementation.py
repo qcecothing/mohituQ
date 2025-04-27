@@ -1,3 +1,30 @@
+"""
+DQI Max-XORSAT Implementation Module
+
+This module implements the Digital Quantum Intermediate (DQI) approach for solving 
+the Maximum XOR Satisfiability (Max-XORSAT) problem. It uses Qiskit to build quantum 
+circuits for DQI and provides functionality to run the algorithm and process results.
+
+The implementation is based on a specific parity check matrix and includes:
+1. Core DQI algorithm implementation
+2. Circuit construction for various quantum operations
+3. Result visualization and export functionality
+
+Example:
+    To use this module:
+    
+    ```python
+    # Create a DQI Max-XORSAT solver
+    solver = DQIMaxXORSAT()
+    
+    # Run the algorithm
+    results = solver.run()
+    
+    # Export the results
+    summary = solver.export_results(results)
+    ```
+"""
+
 import numpy as np
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import QFT
@@ -10,12 +37,25 @@ import csv
 from datetime import datetime
 
 class DQIMaxXORSAT:
+    """
+    Digital Quantum Intermediate (DQI) solver for the Max-XORSAT problem.
+    
+    This class implements the quantum circuit for solving the Max-XORSAT problem
+    using the DQI approach. It includes circuit construction, execution, and
+    results processing.
+    
+    Attributes:
+        parity_check_matrix (numpy.ndarray): The parity check matrix defining the XORSAT problem
+        n_bits (int): Number of bits/qubits in the problem
+        syndrome_table (dict): Lookup table for syndrome decoding
+    """
+    
     def __init__(self, parity_check_matrix=None):
         """
         Initialize the DQI Max-XORSAT solver.
         
         Args:
-            parity_check_matrix: The parity check matrix for the XORSAT problem.
+            parity_check_matrix (numpy.ndarray, optional): The parity check matrix for the XORSAT problem.
                                 Default is the one from the example.
         """
         # Default parity check matrix from the .qmod file
@@ -37,7 +77,15 @@ class DQIMaxXORSAT:
         self.syndrome_table = self._create_syndrome_table()
     
     def _create_syndrome_table(self):
-        """Create the syndrome lookup table for decoding."""
+        """
+        Create the syndrome lookup table for decoding.
+        
+        This method generates a mapping from syndrome patterns to error patterns
+        with Hamming weight <= 2, which is used for syndrome decoding.
+        
+        Returns:
+            dict: A dictionary mapping syndrome integers to error pattern integers
+        """
         syndrome_table = {}
         
         # For each possible error pattern with Hamming weight <= 2
@@ -53,7 +101,14 @@ class DQIMaxXORSAT:
         return syndrome_table
     
     def _binary_to_unary(self, qc, binary_qubits, unary_qubits):
-        """Convert from binary to unary encoding using modern Qiskit approach."""
+        """
+        Convert from binary to unary encoding using modern Qiskit approach.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            binary_qubits (list): The qubits with binary encoding
+            unary_qubits (list): The qubits for unary encoding output
+        """
         # Create a temporary register for one-hot encoding
         one_hot = QuantumRegister(4, "one_hot")
         one_hot_c = ClassicalRegister(4, "one_hot_c")  # Classical register for conditioning
@@ -89,7 +144,13 @@ class DQIMaxXORSAT:
             qc.cx(one_hot[i+1], unary_qubits[i])
     
     def _prepare_dicke_state(self, qc, qubits):
-        """Prepare a Dicke state on the specified qubits using proper control structures."""
+        """
+        Prepare a Dicke state on the specified qubits using proper control structures.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            qubits (list): The qubits to prepare in a Dicke state
+        """
         n = len(qubits)
         
         # Apply the cycle shift operations using control gates
@@ -137,7 +198,14 @@ class DQIMaxXORSAT:
             self._prepare_dicke_state(qc, qubits[1:])
     
     def _apply_vector_product_phase(self, qc, qubits, phase_vector=None):
-        """Apply phase based on the vector product."""
+        """
+        Apply phase based on the vector product.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            qubits (list): The qubits to apply phases to
+            phase_vector (list, optional): Vector of phase values. Defaults to [1.0] * 6.
+        """
         if phase_vector is None:
             phase_vector = [1.0] * 6  # Default from qmod file
         
@@ -146,7 +214,14 @@ class DQIMaxXORSAT:
                 qc.z(qubits[i])
     
     def _apply_matrix_vector_product(self, qc, input_qubits, output_qubits):
-        """Apply the matrix-vector product operation."""
+        """
+        Apply the matrix-vector product operation based on the parity check matrix.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            input_qubits (list): The input qubits
+            output_qubits (list): The output qubits for storing the result
+        """
         # This implements the parity check matrix multiplication
         # out[0] = y[0] ⊕ y[1]
         qc.cx(input_qubits[0], output_qubits[0])
@@ -173,7 +248,14 @@ class DQIMaxXORSAT:
         qc.cx(input_qubits[5], output_qubits[5])
     
     def _syndrome_decode(self, qc, syndrome_qubits, error_qubits):
-        """Apply the syndrome decoding using classical bits and modern control approach."""
+        """
+        Apply the syndrome decoding using classical bits and modern control approach.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            syndrome_qubits (list): The qubits containing the syndrome
+            error_qubits (list): The qubits to store the decoded error pattern
+        """
         # Create classical registers for syndrome measurement
         syndrome_c = ClassicalRegister(len(syndrome_qubits), "syndrome_c")
         qc.add_register(syndrome_c)
@@ -210,12 +292,23 @@ class DQIMaxXORSAT:
         qc.reset(syndrome_qubits)
     
     def _hadamard_transform(self, qc, qubits):
-        """Apply Hadamard gates to all qubits."""
+        """
+        Apply the Hadamard transform to the specified qubits.
+        
+        Args:
+            qc (QuantumCircuit): The quantum circuit to modify
+            qubits (list): The qubits to apply the Hadamard transform to
+        """
         for qubit in qubits:
             qc.h(qubit)
     
     def build_circuit(self):
-        """Build the DQI Max-XORSAT circuit."""
+        """
+        Build the full DQI Max-XORSAT circuit.
+        
+        Returns:
+            QuantumCircuit: The constructed quantum circuit
+        """
         # Create quantum registers
         k_register = QuantumRegister(2, "k")  # Register for k (number of errors)
         y_register = QuantumRegister(6, "y")  # Register for y (the solution vector)
@@ -265,7 +358,15 @@ class DQIMaxXORSAT:
         return qc
     
     def run(self, shots=1024):
-        """Run the DQI circuit and return results."""
+        """
+        Run the DQI Max-XORSAT algorithm.
+        
+        Args:
+            shots (int, optional): Number of shots for the simulation. Defaults to 1024.
+            
+        Returns:
+            dict: Result counts mapping bitstrings to their frequencies
+        """
         circuit = self.build_circuit()
         
         # Use the statevector simulator for accurate results
@@ -290,11 +391,11 @@ class DQIMaxXORSAT:
     
     def visualize_results(self, counts, save_path=None):
         """
-        Visualize the results of the algorithm.
+        Visualize the results as a histogram.
         
         Args:
-            counts: Result counts from the algorithm
-            save_path: Optional path to save the plot. If None, displays the plot.
+            counts (dict): Result counts from the algorithm
+            save_path (str, optional): Optional path to save the plot. If None, displays the plot.
         """
         figure = plot_histogram(counts)
         plt.title("DQI Max-XORSAT Solutions")
@@ -307,14 +408,14 @@ class DQIMaxXORSAT:
             
     def export_results(self, results, output_dir='outputs'):
         """
-        Export the results to files.
+        Export the results to various file formats.
         
         Args:
-            results: Dictionary containing the results
-            output_dir: Directory to save the outputs
-        
+            results (dict): Dictionary containing the results
+            output_dir (str, optional): Directory to save the outputs. Defaults to 'outputs'.
+            
         Returns:
-            Dictionary with paths to the exported files
+            dict: Dictionary with paths to the exported files and summary information
         """
         # Create timestamp for unique filenames
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
