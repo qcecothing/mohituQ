@@ -111,3 +111,48 @@ python src/dqi_max_xorsat_implementation.py
 ## Notes
 
 The code needs to be updated to be compatible with the latest version of Qiskit (1.3.x). The conditional operations and the use of quantum registers in if statements needs to be modified to use classical registers instead.
+
+# QAOA Implementation for N×N Matrices
+
+This implementation uses the Quantum Approximate Optimization Algorithm (QAOA) to solve optimization problems with variable-sized matrices.
+
+## Requirements
+
+The following Python packages are required:
+
+```
+pennylane>=0.30.0
+numpy>=1.20.0
+matplotlib>=3.5.0
+```
+
+## Installation
+
+Install the required packages:
+
+```bash
+# Clone the repository (if you haven't already)
+git clone https://github.com/ecothing/mohituQ.git
+cd mohituQ
+
+# Install dependencies
+pip install -r requirements.txt
+
+# If you encounter import errors for specific packages:
+pip install pennylane
+pip install matplotlib
+```
+
+## Running the Code
+
+To run the QAOA implementation with an N×N matrix:
+
+```bash
+python src/implementingQAOA_N_by_N.py
+```
+
+You can modify the matrix size by changing the `N` value at the top of the script.
+
+## Notes
+
+The implementation allows for flexible matrix sizes by adjusting the `N` parameter. Larger matrices (N > 10) may require more computational resources due to the exponential growth of the quantum state space.
