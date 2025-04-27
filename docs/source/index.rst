@@ -98,6 +98,7 @@ This project contributes to the following United Nations Sustainable Development
    overview
    installation
    usage
+   implementations
    documentation/index
    demo/index
    contributing
