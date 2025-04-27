@@ -99,6 +99,7 @@ This project contributes to the following United Nations Sustainable Development
    installation
    usage
    documentation/index
+   demo/index
    contributing
    acknowledgments
 
