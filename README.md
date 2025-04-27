@@ -49,16 +49,16 @@ docs/dqi.md: Details on Decoded Quantum Interferometry
 
 docs/api.md: API reference
 
-🤝 Contributing
+🤝 **Contributing:**
 We welcome contributions! Please see CONTRIBUTING.md for guidelines on how to get started, report issues, or submit pull requests. All contributors are expected to follow our Code of Conduct.
 
-🛡️ Security
+🛡️ **Security:**
 If you discover a security vulnerability, please see SECURITY.md for instructions on responsible disclosure.
 
-🌍 Acknowledgments
+🌍 **Acknowledgments:**
 Inspired by The Ocean Cleanup, Plastic Odyssey, and WWF Oceans
 
-Quantum algorithm references: Decoded Quantum Interferometry (DQI), QAOA
+**Quantum algorithm references:** Decoded Quantum Interferometry (DQI), QAOA
 
 🌏 UN Sustainable Development Goals
 This project contributes to the following United Nations Sustainable Development Goals:
