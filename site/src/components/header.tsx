@@ -9,9 +9,11 @@ export function TrajectoryHeader() {
     <div className="w-full bg-neutral-800 px-4 py-3">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-xl font-bold">
-          <span className="bg-gradient-to-r from-fuchsia-500 via-amber-500 to-pink-400 bg-clip-text text-transparent">
-            محيطك
-          </span>
+          <Link href="/">
+            <span className="bg-gradient-to-r from-fuchsia-500 via-amber-500 to-pink-400 bg-clip-text text-transparent">
+              محيطك
+            </span>
+          </Link>
         </div>
 
         <Link
