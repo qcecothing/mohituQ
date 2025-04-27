@@ -123,6 +123,49 @@ python src/simplified_xorsat_export.py
 
 This utility demonstrates how to visualize and export optimization results to various formats (JSON, CSV, and PNG).
 
+# Demo Resources
+
+The `src/demo` directory contains demonstration notebooks and resources to help you understand and visualize quantum algorithms. This section is fully documented with Sphinx-compatible documentation in the `src/demo/index.rst` file.
+
+```
+demo/
+├── Hardcoding_maxxorsat.ipynb   # Manual implementation of Max-XORSAT problem
+├── decoding.ipynb               # Demonstrations of quantum decoding techniques
+├── dqi_perf.png                 # Performance visualization of DQI algorithm
+├── README.md                    # Standard documentation in Markdown
+└── index.rst                    # Sphinx documentation entry point
+```
+
+## Demo Notebooks
+
+> **Note**
+> These notebooks require Jupyter to run and demonstrate core algorithmic concepts.
+
+### Hardcoding_maxxorsat.ipynb
+
+This notebook provides a step-by-step implementation of the Max-XORSAT problem solution with manual circuit construction. It's useful for understanding the underlying quantum operations without abstraction layers.
+
+Key sections:
+- Manual circuit construction
+- Step-by-step execution of the algorithm
+- Visualization of intermediate results
+
+### decoding.ipynb
+
+Demonstrates quantum decoding techniques used in DQI algorithm implementation, showing how syndrome decoding works in practice.
+
+Key sections:
+- Syndrome table construction
+- Error pattern identification
+- Practical decoding examples
+
+## Performance Visualizations
+
+The `dqi_perf.png` image shows performance benchmarks for the DQI algorithm on Max-XORSAT problems of various sizes.
+
+> **See Also**
+> For more extensive demonstrations, check the full documentation site and the demo directory.
+
 # Notes
 
 The implementations showcase different quantum approaches to optimization problems relevant to ocean cleanup logistics. These algorithms can be adapted and scaled to address real-world distribution and collection route optimization challenges.
