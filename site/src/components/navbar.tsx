@@ -2,11 +2,11 @@
 import React from "react";
 import { FloatingNav } from "$/components/ui/floating-navbar";
 import {
-  IconApps,
+  IconBulb,
+  IconChartBar,
+  IconEye,
   IconHome,
-  IconMessage,
-  IconSettings,
-  IconUser,
+  IconMap,
 } from "@tabler/icons-react";
 
 export function Navbar() {
@@ -19,27 +19,27 @@ export function Navbar() {
     {
       name: "Vision",
       link: "/#vision",
-      icon: <IconUser className="h-4 w-4 text-neutral-500" />,
+      icon: <IconEye className="h-4 w-4 text-neutral-500" />,
     },
     {
       name: "State",
       link: "/#state",
-      icon: <IconMessage className="h-4 w-4 text-neutral-500" />,
+      icon: <IconChartBar className="h-4 w-4 text-neutral-500" />,
     },
     {
       name: "Solution",
       link: "/#solution",
-      icon: <IconSettings className="h-4 w-4 text-neutral-500" />,
+      icon: <IconBulb className="h-4 w-4 text-neutral-500" />,
     },
     {
       name: "App",
       link: "/trajectory",
-      icon: <IconApps className="h-4 w-4 text-neutral-500" />,
+      icon: <IconMap className="h-4 w-4 text-neutral-500" />,
     },
   ];
 
   return (
-    <div className="relative  w-full">
+    <div className="relative w-full">
       <FloatingNav navItems={navItems} />
     </div>
   );
