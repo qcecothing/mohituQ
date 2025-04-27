@@ -22,7 +22,12 @@ def create_q_matrix(n):
     return Q
 
 # Create the Q matrix with the specified size
-Q = create_q_matrix(N)
+Q = np.array([
+    [-2,  2,  0,  2],
+    [ 2, -2,  2,  0],
+    [ 0,  2, -2,  2],
+    [ 2,  0,  2, -2]
+])
 
 print("Q matrix:")
 print(Q)
@@ -65,7 +70,8 @@ depth = 2
 def circuit(params, **kwargs):
     for w in wires:
         qml.Hadamard(wires=w)
-    qml.layer(qaoa_layer, depth, params[0], params[1])
+    for d in range(depth):
+        qaoa_layer(params[d, 0], params[d, 1])
 
 # Define device
 dev = qml.device("default.qubit", wires=n_qubits)
@@ -78,7 +84,7 @@ def cost_fn(params):
 
 # Optimize
 opt = qml.GradientDescentOptimizer()
-steps = 70
+steps = 200
 params = np.array([[0.5, 0.5] for _ in range(depth)], requires_grad=True)
 
 print("\nOptimizing parameters...")
@@ -92,11 +98,11 @@ print(params)
 
 # Get final probabilities
 @qml.qnode(dev)
-def prob_circuit(gamma, alpha):
-    circuit([gamma, alpha])
+def prob_circuit(params):
+    circuit(params)
     return qml.probs(wires=wires)
 
-probs = prob_circuit(params[0], params[1])
+probs = prob_circuit(params)
 
 # Plot
 plt.style.use("seaborn-v0_8") if "seaborn-v0_8" in plt.style.available else plt.style.use("default")
