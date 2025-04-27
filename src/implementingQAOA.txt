@@ -1,0 +1,90 @@
+!pip install pennylane
+
+import pennylane as qml
+from pennylane import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the Q matrix
+Q = np.array([
+    [-9, 5, 5],
+    [5, -6, 5],
+    [5, 5, 5]
+])
+
+
+# Number of qubits
+n_qubits = Q.shape[0]
+wires = range(n_qubits)
+
+# Translate QUBO to cost Hamiltonian
+coeffs = []
+ops = []
+
+for i in range(n_qubits):
+    coeffs.append(Q[i, i] / 2)
+    ops.append(qml.PauliZ(i))
+    for j in range(i + 1, n_qubits):
+        coeffs.append(Q[i, j] / 4)
+        ops.append(qml.PauliZ(i) @ qml.PauliZ(j))
+
+cost_h = qml.Hamiltonian(coeffs, ops)
+print("Cost Hamiltonian:")
+print(cost_h)
+
+# Define mixer Hamiltonian (standard X mixer)
+mixer_coeffs = [1 for _ in range(n_qubits)]
+mixer_ops = [qml.PauliX(i) for i in range(n_qubits)]
+mixer_h = qml.Hamiltonian(mixer_coeffs, mixer_ops)
+
+print("\nMixer Hamiltonian:")
+print(mixer_h)
+
+# QAOA layer
+def qaoa_layer(gamma, alpha):
+    qml.qaoa.cost_layer(gamma, cost_h) # Use qml.qaoa to access cost_layer and mixer_layer
+    qml.qaoa.mixer_layer(alpha, mixer_h)
+
+# Circuit
+depth = 2
+
+def circuit(params, **kwargs):
+    for w in wires:
+        qml.Hadamard(wires=w)
+    qml.layer(qaoa_layer, depth, params[0], params[1])
+
+# Define device
+dev = qml.device("default.qubit", wires=n_qubits)
+
+# Cost function
+@qml.qnode(dev)
+def cost_fn(params):
+    circuit(params)
+    return qml.expval(cost_h)
+
+
+# Optimize
+opt = qml.GradientDescentOptimizer()
+steps = 70
+params = np.array([[0.5, 0.5], [0.5, 0.5]], requires_grad=True)
+
+for i in range(steps):
+    params = opt.step(cost_fn, params)
+
+print("\nOptimal Parameters:")
+print(params)
+
+# Get final probabilities
+@qml.qnode(dev)
+def prob_circuit(gamma, alpha):
+    circuit([gamma, alpha])
+    return qml.probs(wires=wires)
+
+probs = prob_circuit(params[0], params[1])
+
+# Plot
+plt.style.use("seaborn-v0_8")
+plt.bar(range(2 ** n_qubits), probs)
+plt.xlabel("Bitstring (decimal)")
+plt.ylabel("Probability")
+plt.title("QAOA Output Distribution")
+plt.show()

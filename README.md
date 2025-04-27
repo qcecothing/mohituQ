@@ -19,27 +19,6 @@ Tools for simulating ocean plastic distribution and evaluating cleanup strategie
 
 Extensible framework for integrating real-world data and collaborating with citizen science initiatives
 
-📦 Installation
-bash
-# Clone this repository
-git clone https://github.com/ecothing/mohituQ.git
-cd mohituQ
-
-# (Optional) Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-🛠️ Usage
-bash
-# Run a sample optimization
-python run_optimization.py --config configs/sample_config.yaml
-
-# Visualize results
-python visualize.py --input results/sample_output.json
-See the examples directory for more use cases and sample scripts.
-
 📖 Documentation
 **Full documentation:** https://qcecothing.github.io/mohituQ/
 
@@ -75,13 +54,29 @@ This project is licensed under the MIT License. See LICENSE for details.
 
 Let's use open source and quantum computing to help restore our oceans!
 
-# DQI Max-XORSAT Implementation
+# Implementations
 
-This project implements a quantum algorithm for the Max-XORSAT problem using the Differential Quantum Inference (DQI) approach.
+📦 Installation
+bash
+# Clone this repository
+git clone https://github.com/ecothing/mohituQ.git
+cd mohituQ
 
-## Requirements
+# (Optional) Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate
 
-The following Python packages are required:
+# Install dependencies
+pip install -r requirements.txt
+🛠️ Usage
+bash
+
+
+## DQI Max-XORSAT Implementation
+
+This implementation uses the Decoded Quantum Interferometry (DQI) approach to solve the Maximum XOR Satisfiability (Max-XORSAT) problem, an NP-hard optimization problem relevant to network route optimization.
+
+### Requirements
 
 ```
 numpy>=1.20.0
@@ -90,35 +85,19 @@ qiskit-aer>=0.11.0
 matplotlib>=3.5.0
 ```
 
-## Installation
-
-Install the required packages:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Running the Code
-
-The implementation has a known issue with conditional operations that needs to be fixed. The current code was written for an older version of Qiskit, and the `if_test` method now requires a classical bit or register, not a quantum bit.
-
-To run the code after fixing the issue:
+### Running the Implementation
 
 ```bash
 python src/dqi_max_xorsat_implementation.py
 ```
 
-## Notes
+This script creates a DQI Max-XORSAT solver, builds and runs a quantum circuit using Qiskit, and exports the results as JSON, CSV, and visualization plots.
 
-The code needs to be updated to be compatible with the latest version of Qiskit (1.3.x). The conditional operations and the use of quantum registers in if statements needs to be modified to use classical registers instead.
+## QAOA Implementation
 
-# QAOA Implementation for N×N Matrices
+This implementation uses the Quantum Approximate Optimization Algorithm (QAOA) to solve optimization problems represented as N×N matrices.
 
-This implementation uses the Quantum Approximate Optimization Algorithm (QAOA) to solve optimization problems with variable-sized matrices.
-
-## Requirements
-
-The following Python packages are required:
+### Requirements
 
 ```
 pennylane>=0.30.0
@@ -126,33 +105,24 @@ numpy>=1.20.0
 matplotlib>=3.5.0
 ```
 
-## Installation
-
-Install the required packages:
-
-```bash
-# Clone the repository (if you haven't already)
-git clone https://github.com/ecothing/mohituQ.git
-cd mohituQ
-
-# Install dependencies
-pip install -r requirements.txt
-
-# If you encounter import errors for specific packages:
-pip install pennylane
-pip install matplotlib
-```
-
-## Running the Code
-
-To run the QAOA implementation with an N×N matrix:
+### Running the Implementation
 
 ```bash
 python src/implementingQAOA_N_by_N.py
 ```
 
-You can modify the matrix size by changing the `N` value at the top of the script.
+You can modify the matrix size by changing the `N` parameter in the script. The implementation supports optimization of variable-sized matrices and provides visualizations of the results.
 
-## Notes
+## Export Utilities
 
-The implementation allows for flexible matrix sizes by adjusting the `N` parameter. Larger matrices (N > 10) may require more computational resources due to the exponential growth of the quantum state space.
+The repository includes helper modules for result export and visualization:
+
+```bash
+python src/simplified_xorsat_export.py
+```
+
+This utility demonstrates how to visualize and export optimization results to various formats (JSON, CSV, and PNG).
+
+# Notes
+
+The implementations showcase different quantum approaches to optimization problems relevant to ocean cleanup logistics. These algorithms can be adapted and scaled to address real-world distribution and collection route optimization challenges.
