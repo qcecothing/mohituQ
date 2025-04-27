@@ -55,4 +55,4 @@ The ``examples/`` directory contains sample scripts demonstrating various use ca
 API Reference
 ------------
 
-For detailed API documentation, please see the :doc:`documentation/api` page. 
+For detailed API documentation, see the API section in the sidebar. 
