@@ -14,6 +14,7 @@ Example:
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 # Set the size of the N x N matrix
 N = 5  # You can change this to any value you want
@@ -46,8 +47,7 @@ def create_q_matrix(n):
     return Q
 
 # Create the Q matrix with the specified size
-Q = create_q_matrix(N)
-
+Q = np.array([[-5, 1, 0, 2, 0, 0, 0, 0, 0], [1, 3, 0, 0, 2, 0, 1, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0, 0], [2, 0, 0, -9, 1, 0, 0, 2, 0], [0, 2, 0, 1, -7, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0, -1, 0, 0], [0, 0, 0, 2, 1, 0, 0, 5, 0], [0, 0, 0, 0, 0, 0, 0, 0, 11]])
 print("Q matrix:")
 print(Q)
 
@@ -103,7 +103,8 @@ def circuit(params, **kwargs):
     """
     for w in wires:
         qml.Hadamard(wires=w)
-    qml.layer(qaoa_layer, depth, params[0], params[1])
+    for d in range(depth):
+        qaoa_layer(params[d, 0], params[d, 1])
 
 # Define device
 dev = qml.device("default.qubit", wires=n_qubits)
@@ -122,35 +123,26 @@ def cost_fn(params):
     circuit(params)
     return qml.expval(cost_h)
 
-def optimize_circuit(steps=70):
-    """
-    Optimize the QAOA circuit parameters using gradient descent.
-    
-    Args:
-        steps (int): Number of optimization steps
-        
-    Returns:
-        numpy.ndarray: Optimized parameters
-    """
-    # Optimize
-    opt = qml.GradientDescentOptimizer()
-    params = np.array([[0.5, 0.5] for _ in range(depth)], requires_grad=True)
+# Optimize
+opt = qml.GradientDescentOptimizer()
+steps = 300
+params = np.array([[0.5, 0.5] for _ in range(depth)], requires_grad=True)
 
-    print("\nOptimizing parameters...")
-    for i in range(steps):
-        params = opt.step(cost_fn, params)
-        if i % 10 == 0:
-            print(f"Step {i}: Cost = {cost_fn(params):.6f}")
-            
-    return params
-
-# Optimize circuit parameters
-params = optimize_circuit()
+print("\nOptimizing parameters...")
+for i in range(steps):
+    params = opt.step(cost_fn, params)
+    if i % 10 == 0:
+        print(f"Step {i}: Cost = {cost_fn(params):.6f}")
 
 print("\nOptimal Parameters:")
 print(params)
 
 @qml.qnode(dev)
+def prob_circuit(params):
+    circuit(params)
+    return qml.probs(wires=wires)
+
+probs = prob_circuit(params)
 def prob_circuit(gamma, alpha):
     """
     Quantum node that returns the probabilities of all computational basis states.
@@ -219,6 +211,20 @@ def calculate_solution_energy(binary_solution):
 # Calculate the energy of the solution
 solution_energy = calculate_solution_energy(binary_solution)
 print(f"Energy of the solution: {solution_energy}")
+
+data = [(format(i, f"0{n_qubits}b"), prob) for i, prob in enumerate(probs)]
+
+# Define the file name
+csv_filename = f"qaoa_output_N{N}.csv"
+
+# Write the data to a CSV file
+with open(csv_filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Binary Value", "Probability"])  # Write header
+    writer.writerows(data)  # Write the rows
+
+print(f"CSV file saved as {csv_filename}")
+
 
 # Show how to use different N values
 print("\nTo use a different matrix size, change the N value at the top of the script.")
