@@ -19,8 +19,9 @@ mohituQ is an open-source project focused on leveraging quantum algorithms-speci
 
 - Extensible framework for integrating real-world data and collaborating with citizen science initiatives
 
-📦 Installation
-bash
+## Installation
+
+```bash
 # Clone this repository
 git clone https://github.com/ecothing/mohituQ.git
 cd mohituQ
@@ -31,14 +32,7 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-🛠️ Usage
-bash
-# Run a sample optimization
-python run_optimization.py --config configs/sample_config.yaml
-
-# Visualize results
-python visualize.py --input results/sample_output.json
-See the examples directory for more use cases and sample scripts.
+```
 
 📖 **Documentation** <br>
 
@@ -78,65 +72,27 @@ This project is licensed under the MIT License. See LICENSE for details.
 
 Let's use open source and quantum computing to help restore our oceans!
 
-# Implementations
+## Running the Implementations
 
-📦 Installation
-bash
-# Clone this repository
-git clone https://github.com/ecothing/mohituQ.git
-cd mohituQ
+### DQI Max-XORSAT Implementation
 
-# (Optional) Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-🛠️ Usage
-bash
-
-## DQI Max-XORSAT Implementation
-
-This implementation uses the Decoded Quantum Interferometry (DQI) approach to solve the Maximum XOR Satisfiability (Max-XORSAT) problem, an NP-hard optimization problem relevant to network route optimization.
-
-### Requirements
-
-```
-numpy>=1.20.0
-qiskit>=0.39.0
-qiskit-aer>=0.11.0
-matplotlib>=3.5.0
-```
-
-### Running the Implementation
+This implementation uses the Decoded Quantum Interferometry (DQI) approach to solve the Maximum XOR Satisfiability (Max-XORSAT) problem, relevant to network route optimization.
 
 ```bash
 python src/dqi_max_xorsat_implementation.py
 ```
 
-This script creates a DQI Max-XORSAT solver, builds and runs a quantum circuit using Qiskit, and exports the results as JSON, CSV, and visualization plots.
-
-## QAOA Implementation
+### QAOA Implementation
 
 This implementation uses the Quantum Approximate Optimization Algorithm (QAOA) to solve optimization problems represented as N×N matrices.
-
-### Requirements
-
-```
-pennylane>=0.30.0
-numpy>=1.20.0
-matplotlib>=3.5.0
-```
-
-### Running the Implementation
 
 ```bash
 python src/implementingQAOA_N_by_N.py
 ```
 
-You can modify the matrix size by changing the `N` parameter in the script. The implementation supports optimization of variable-sized matrices and provides visualizations of the results.
+You can modify the matrix size by changing the `N` parameter in the script.
 
-## Export Utilities
+### Export Utilities
 
 The repository includes helper modules for result export and visualization:
 
@@ -144,51 +100,10 @@ The repository includes helper modules for result export and visualization:
 python src/simplified_xorsat_export.py
 ```
 
-This utility demonstrates how to visualize and export optimization results to various formats (JSON, CSV, and PNG).
+## Demo Resources
 
-# Demo Resources
+The `src/demo` directory contains demonstration notebooks and resources to help you understand and visualize quantum algorithms.
 
-The `src/demo` directory contains demonstration notebooks and resources to help you understand and visualize quantum algorithms. This section is fully documented with Sphinx-compatible documentation in the `src/demo/index.rst` file.
-
-```
-demo/
-├── Hardcoding_maxxorsat.ipynb   # Manual implementation of Max-XORSAT problem
-├── decoding.ipynb               # Demonstrations of quantum decoding techniques
-├── dqi_perf.png                 # Performance visualization of DQI algorithm
-├── README.md                    # Standard documentation in Markdown
-└── index.rst                    # Sphinx documentation entry point
-```
-
-## Demo Notebooks
-
-> **Note**
-> These notebooks require Jupyter to run and demonstrate core algorithmic concepts.
-
-### Hardcoding_maxxorsat.ipynb
-
-This notebook provides a step-by-step implementation of the Max-XORSAT problem solution with manual circuit construction. It's useful for understanding the underlying quantum operations without abstraction layers.
-
-Key sections:
-- Manual circuit construction
-- Step-by-step execution of the algorithm
-- Visualization of intermediate results
-
-### decoding.ipynb
-
-Demonstrates quantum decoding techniques used in DQI algorithm implementation, showing how syndrome decoding works in practice.
-
-Key sections:
-- Syndrome table construction
-- Error pattern identification
-- Practical decoding examples
-
-## Performance Visualizations
-
-The `dqi_perf.png` image shows performance benchmarks for the DQI algorithm on Max-XORSAT problems of various sizes.
-
-> **See Also**
-> For more extensive demonstrations, check the full documentation site and the demo directory.
-
-# Notes
+## Notes
 
 The implementations showcase different quantum approaches to optimization problems relevant to ocean cleanup logistics. These algorithms can be adapted and scaled to address real-world distribution and collection route optimization challenges.
