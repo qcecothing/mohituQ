@@ -1,6 +1,7 @@
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 # Set the size of the N x N matrix
 N = 5  # You can change this to any value you want
@@ -22,13 +23,7 @@ def create_q_matrix(n):
     return Q
 
 # Create the Q matrix with the specified size
-Q = np.array([
-    [-2,  2,  0,  2],
-    [ 2, -2,  2,  0],
-    [ 0,  2, -2,  2],
-    [ 2,  0,  2, -2]
-])
-
+Q = np.array([[-5, 1, 0, 2, 0, 0, 0, 0, 0], [1, 3, 0, 0, 2, 0, 1, 0, 0], [0, 0, 1, 0, 0, 0, 0, 0, 0], [2, 0, 0, -9, 1, 0, 0, 2, 0], [0, 2, 0, 1, -7, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0, -1, 0, 0], [0, 0, 0, 2, 1, 0, 0, 5, 0], [0, 0, 0, 0, 0, 0, 0, 0, 11]])
 print("Q matrix:")
 print(Q)
 
@@ -84,7 +79,7 @@ def cost_fn(params):
 
 # Optimize
 opt = qml.GradientDescentOptimizer()
-steps = 200
+steps = 300
 params = np.array([[0.5, 0.5] for _ in range(depth)], requires_grad=True)
 
 print("\nOptimizing parameters...")
@@ -133,6 +128,20 @@ for i in range(n_qubits):
         solution_energy += Q[i, j] * spin_i * spin_j
 
 print(f"Energy of the solution: {solution_energy}")
+
+data = [(format(i, f"0{n_qubits}b"), prob) for i, prob in enumerate(probs)]
+
+# Define the file name
+csv_filename = f"qaoa_output_N{N}.csv"
+
+# Write the data to a CSV file
+with open(csv_filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Binary Value", "Probability"])  # Write header
+    writer.writerows(data)  # Write the rows
+
+print(f"CSV file saved as {csv_filename}")
+
 
 # Show how to use different N values
 print("\nTo use a different matrix size, change the N value at the top of the script.")
