@@ -120,7 +120,3 @@ This project is licensed under the MIT License. See `LICENSE <https://github.com
 
 |
 
-    "The future of our changing climate is tied inextricably to tech, and these leaders are showing how we can use open source to fight back."
-    
-    — GitHub Environmental Sustainability Team
-
