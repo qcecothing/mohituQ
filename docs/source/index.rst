@@ -23,7 +23,7 @@ Note
 The name "محيطك" (mohituQ) means "Your Ocean" in Arabic, reflecting our commitment to empowering communities to reclaim their marine environments through advanced technology.
 
 Project Goals
-============
+=============
 
 * Model the logistical challenge of ocean plastic collection as a large-scale optimization problem.
 * Implement quantum-inspired and classical algorithms (DQI, QAOA, and others) to find optimal or near-optimal solutions for net placement and collection routes.
@@ -38,10 +38,10 @@ Features
 * Extensible framework for integrating real-world data and collaborating with citizen science initiatives
 
 Quick Start
-==========
+===========
 
 Installation
------------
+------------
 
 .. code-block:: bash
 
@@ -57,18 +57,16 @@ Installation
    pip install -r requirements.txt
 
 Basic Usage
-----------
+-----------
 
 .. code-block:: bash
 
    # Run a sample optimization
-   python run_optimization.py --config configs/sample_config.yaml
+   python src/dqi_max_xorsat_implementation.py
 
-   # Visualize results
-   python visualize.py --input results/sample_output.json
 
 UN Sustainable Development Goals
-===============================
+================================
 
 This project contributes to the following United Nations Sustainable Development Goals:
 
@@ -105,12 +103,12 @@ This project contributes to the following United Nations Sustainable Development
    acknowledgments
 
 Contributing
------------
+------------
 
 We welcome contributions! Please see the :doc:`contributing` page for guidelines on how to get started, report issues, or submit pull requests. All contributors are expected to follow our Code of Conduct.
 
 Acknowledgments
---------------
+---------------
 
 * Inspired by The Ocean Cleanup, Plastic Odyssey, and WWF Oceans
 * Quantum algorithm references: Decoded Quantum Interferometry (DQI), QAOA

@@ -13,7 +13,10 @@ You can run a sample optimization using the provided configuration:
 
 .. code-block:: bash
 
-   python run_optimization.py --config configs/sample_config.yaml
+   python src/dqi_max_xorsat_implementation.py
+
+   python src/implementingQAOA_N_by_N.py
+
 
 The configuration file specifies parameters such as:
 
