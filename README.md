@@ -74,3 +74,40 @@ This project contributes to the following United Nations Sustainable Development
 This project is licensed under the MIT License. See LICENSE for details.
 
 Let's use open source and quantum computing to help restore our oceans!
+
+# DQI Max-XORSAT Implementation
+
+This project implements a quantum algorithm for the Max-XORSAT problem using the Differential Quantum Inference (DQI) approach.
+
+## Requirements
+
+The following Python packages are required:
+
+```
+numpy>=1.20.0
+qiskit>=0.39.0
+qiskit-aer>=0.11.0
+matplotlib>=3.5.0
+```
+
+## Installation
+
+Install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Running the Code
+
+The implementation has a known issue with conditional operations that needs to be fixed. The current code was written for an older version of Qiskit, and the `if_test` method now requires a classical bit or register, not a quantum bit.
+
+To run the code after fixing the issue:
+
+```bash
+python src/dqi_max_xorsat_implementation.py
+```
+
+## Notes
+
+The code needs to be updated to be compatible with the latest version of Qiskit (1.3.x). The conditional operations and the use of quantum registers in if statements needs to be modified to use classical registers instead.
