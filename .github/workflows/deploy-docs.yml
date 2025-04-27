@@ -8,6 +8,7 @@ on:
       - 'docs/**'
       - 'README.md'
       - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -27,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx sphinx-rtd-theme
+          if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; else pip install sphinx sphinx-rtd-theme nbsphinx myst-parser jupyter-sphinx sphinx-copybutton; fi
 
       - name: Build documentation
         run: |
@@ -38,4 +39,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: docs/build/html
-          branch: gh-pages 
+          branch: gh-pages
+          clean: true 

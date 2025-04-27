@@ -22,12 +22,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx sphinx-rtd-theme
+          if [ -f docs/requirements.txt ]; then pip install -r docs/requirements.txt; else pip install sphinx sphinx-rtd-theme nbsphinx myst-parser jupyter-sphinx sphinx-copybutton; fi
 
       - name: Create logo placeholder
         run: |
@@ -54,4 +54,4 @@ jobs:
           echo "For manual configuration, please ensure GitHub Pages settings are:"
           echo "- Source: Deploy from a branch"
           echo "- Branch: gh-pages with / (root) folder"
-          echo "The site should be available at: https://qcecothing.github.io/mohituQ/" 
+          echo "The site should be available at: https://github.com/[owner]/mohituQ/settings/pages" 

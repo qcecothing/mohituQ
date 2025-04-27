@@ -9,6 +9,8 @@ Welcome to mohituQ's documentation!
 
 **mohituQ** (*محيطك*) is an open-source project focused on leveraging quantum algorithms—specifically Decoded Quantum Interferometry (DQI)—to optimize the placement and routing of trash-collection systems for cleaning up ocean plastic.
 
+Latest version: 0.1.1 (2023)
+
 Project Goals
 ------------
 
