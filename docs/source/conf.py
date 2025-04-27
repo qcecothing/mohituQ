@@ -16,10 +16,10 @@ release = '0.1.0'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
 ]
 
 templates_path = ['_templates']
@@ -36,11 +36,12 @@ html_static_path = ['_static']
 # Logo configuration
 html_logo = '_static/images/mohituq_logo.png'
 html_favicon = '_static/images/mohituq_logo.png'
+html_title = 'mohituQ Documentation'
 
 # Theme options
 html_theme_options = {
     'logo_only': True,  # Display only the logo
-    'display_version': True,
+    'display_version': False,
     'navigation_depth': 4,
     'collapse_navigation': False,
     'sticky_navigation': True,
@@ -76,3 +77,6 @@ intersphinx_mapping = {
 def setup(app):
     app.add_css_file('css/custom.css')
     app.add_js_file('js/custom.js')
+
+# -- Options for todo extension ----------------------------------------------
+todo_include_todos = True
