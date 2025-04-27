@@ -1,0 +1,10 @@
+Circuit built successfully.
+Running circuit...
+Exporting results to files...
+
+Best solution: 000000
+
+Files exported:
+- JSON: outputs/results_20250427_042210.json
+- CSV: outputs/results_20250427_042210.csv
+- PLOT: outputs/histogram_20250427_042210.png
