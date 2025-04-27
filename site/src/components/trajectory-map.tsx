@@ -7,6 +7,7 @@ import {
   Marker,
   Polyline,
   TileLayer,
+  Tooltip,
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
@@ -20,8 +21,10 @@ const icon = L.icon({
   iconAnchor: [12, 41],
 });
 
-const DEFAULT_LAT = 25.2048493;
-const DEFAULT_LON = 55.2707828;
+const DEFAULT_LAT = 24.4539;
+const DEFAULT_LON = 54.3773;
+const CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000;
+const SAMPLING_RATE = 3;
 
 export type TrajectorySegment = "shore" | "offshore" | "inland";
 
@@ -38,91 +41,190 @@ export type CombinedPoint = {
   segment: TrajectorySegment;
 };
 
+const downsamplePoints = (
+  points: CombinedPoint[],
+  samplingRate: number,
+): CombinedPoint[] => {
+  if (!points || points.length <= 2 || samplingRate <= 1) return points;
+
+  const result: CombinedPoint[] = [];
+
+  if (points.length > 0) {
+    result.push(points[0]);
+  }
+
+  for (let i = samplingRate; i < points.length - 1; i += samplingRate) {
+    result.push(points[i]);
+  }
+
+  if (points.length > 1) {
+    result.push(points[points.length - 1]);
+  }
+
+  return result;
+};
+
 const getCombinedPath = (
   trajectoryData: TrajectoryData | null,
   sourceLat: number,
   sourceLon: number,
 ): CombinedPoint[] => {
   if (!trajectoryData) return [];
-  const combinedPoints: CombinedPoint[] = [];
-  const pushPoints = (
+
+  const shorePoints: CombinedPoint[] = [];
+  const offshorePoints: CombinedPoint[] = [];
+  const inlandPoints: CombinedPoint[] = [];
+
+  const createOrderedPoints = (
     lats: number[] | undefined,
     lons: number[] | undefined,
     segment: TrajectorySegment,
+    pointsArray: CombinedPoint[],
   ) => {
     if (!lats || !lons) return;
     const count = Math.min(lats.length, lons.length);
     for (let i = 0; i < count; i++) {
       if (!isNaN(lats[i]) && !isNaN(lons[i])) {
-        combinedPoints.push({ lat: lats[i], lon: lons[i], segment });
+        pointsArray.push({ lat: lats[i], lon: lons[i], segment });
       }
     }
   };
 
-  pushPoints(
+  createOrderedPoints(
     trajectoryData.latitudes_shore,
     trajectoryData.longitudes_shore,
     "shore",
+    shorePoints,
   );
-  pushPoints(
+
+  createOrderedPoints(
     trajectoryData.latitudes_offshore,
     trajectoryData.longitudes_offshore,
     "offshore",
+    offshorePoints,
   );
-  pushPoints(
+
+  createOrderedPoints(
     trajectoryData.latitudes_inland,
     trajectoryData.longitudes_inland,
     "inland",
+    inlandPoints,
   );
 
-  if (combinedPoints.length === 0) return [];
+  if (
+    shorePoints.length === 0 && offshorePoints.length === 0 &&
+    inlandPoints.length === 0
+  ) {
+    return [];
+  }
 
-  let startIndex = 0;
-  let bestDistance = Infinity;
-  for (let i = 0; i < combinedPoints.length; i++) {
-    const d = distance(
+  const segments = [
+    { points: shorePoints, name: "shore" },
+    { points: offshorePoints, name: "offshore" },
+    { points: inlandPoints, name: "inland" },
+  ].filter((segment) => segment.points.length > 0);
+
+  if (segments.length === 1) {
+    return segments[0].points;
+  }
+
+  let closestSegmentIndex = 0;
+  let closestPointDistance = Infinity;
+  let closestPointIsEnd = false;
+
+  segments.forEach((segment, segmentIndex) => {
+    const firstPoint = segment.points[0];
+    const firstDistance = distance(
       sourceLat,
       sourceLon,
-      combinedPoints[i].lat,
-      combinedPoints[i].lon,
+      firstPoint.lat,
+      firstPoint.lon,
     );
-    if (d < bestDistance) {
-      bestDistance = d;
-      startIndex = i;
-    }
-  }
-  const used = Array(combinedPoints.length).fill(false);
-  const route: CombinedPoint[] = [];
-  route.push(combinedPoints[startIndex]);
-  used[startIndex] = true;
-  let current = combinedPoints[startIndex];
 
-  for (let count = 1; count < combinedPoints.length; count++) {
-    let nearestIndex = -1;
-    bestDistance = Infinity;
-    for (let i = 0; i < combinedPoints.length; i++) {
-      if (!used[i]) {
-        const d = distance(
-          current.lat,
-          current.lon,
-          combinedPoints[i].lat,
-          combinedPoints[i].lon,
-        );
-        if (d < bestDistance) {
-          bestDistance = d;
-          nearestIndex = i;
-        }
+    const lastPoint = segment.points[segment.points.length - 1];
+    const lastDistance = distance(
+      sourceLat,
+      sourceLon,
+      lastPoint.lat,
+      lastPoint.lon,
+    );
+
+    if (firstDistance < closestPointDistance) {
+      closestPointDistance = firstDistance;
+      closestSegmentIndex = segmentIndex;
+      closestPointIsEnd = false;
+    }
+
+    if (lastDistance < closestPointDistance) {
+      closestPointDistance = lastDistance;
+      closestSegmentIndex = segmentIndex;
+      closestPointIsEnd = true;
+    }
+  });
+
+  const result: CombinedPoint[] = [];
+  const usedSegments = new Array(segments.length).fill(false);
+
+  if (closestPointIsEnd) {
+    result.push(...segments[closestSegmentIndex].points.slice().reverse());
+  } else {
+    result.push(...segments[closestSegmentIndex].points);
+  }
+
+  usedSegments[closestSegmentIndex] = true;
+
+  while (usedSegments.some((used) => !used)) {
+    const lastPoint = result[result.length - 1];
+    let bestSegmentIndex = -1;
+    let bestDistance = Infinity;
+    let shouldReverse = false;
+
+    for (let i = 0; i < segments.length; i++) {
+      if (usedSegments[i]) continue;
+
+      const firstPoint = segments[i].points[0];
+      const firstDistance = distance(
+        lastPoint.lat,
+        lastPoint.lon,
+        firstPoint.lat,
+        firstPoint.lon,
+      );
+
+      const lastPoint2 = segments[i].points[segments[i].points.length - 1];
+      const lastDistance = distance(
+        lastPoint.lat,
+        lastPoint.lon,
+        lastPoint2.lat,
+        lastPoint2.lon,
+      );
+
+      if (firstDistance < bestDistance) {
+        bestDistance = firstDistance;
+        bestSegmentIndex = i;
+        shouldReverse = false;
+      }
+
+      if (lastDistance < bestDistance) {
+        bestDistance = lastDistance;
+        bestSegmentIndex = i;
+        shouldReverse = true;
       }
     }
-    if (nearestIndex !== -1) {
-      route.push(combinedPoints[nearestIndex]);
-      used[nearestIndex] = true;
-      current = combinedPoints[nearestIndex];
+
+    if (bestSegmentIndex !== -1) {
+      if (shouldReverse) {
+        result.push(...segments[bestSegmentIndex].points.slice().reverse());
+      } else {
+        result.push(...segments[bestSegmentIndex].points);
+      }
+      usedSegments[bestSegmentIndex] = true;
+    } else {
+      break;
     }
   }
-  return route;
-};
 
+  return result;
+};
 const getColoredSegments = (route: CombinedPoint[]) => {
   if (!route || route.length === 0) return [];
   const segments: { segment: TrajectorySegment; points: CombinedPoint[] }[] =
@@ -154,6 +256,7 @@ const getPolylineColor = (sourceColor: string) => sourceColor;
 interface TrajectoryPathRendererProps {
   animationFrame: number;
   combinedRoute: CombinedPoint[];
+  downsampledRoute: CombinedPoint[];
   sourceColor: string;
   shouldFollow: boolean;
 }
@@ -161,14 +264,23 @@ interface TrajectoryPathRendererProps {
 const TrajectoryPathRenderer = ({
   animationFrame,
   combinedRoute,
+  downsampledRoute,
   sourceColor,
   shouldFollow,
 }: TrajectoryPathRendererProps) => {
   const map = useMap();
-  const segments = getColoredSegments(combinedRoute);
-  const currentRoute = combinedRoute.slice(
+  const segments = getColoredSegments(downsampledRoute);
+
+  const scaledFrame = Math.min(
+    Math.floor(
+      animationFrame * (downsampledRoute.length / combinedRoute.length),
+    ),
+    downsampledRoute.length - 1,
+  );
+
+  const currentRoute = downsampledRoute.slice(
     0,
-    Math.min(animationFrame + 1, combinedRoute.length),
+    Math.min(scaledFrame + 1, downsampledRoute.length),
   );
 
   React.useEffect(() => {
@@ -182,15 +294,17 @@ const TrajectoryPathRenderer = ({
 
   return (
     <>
-      {combinedRoute.length > 1 && (
+      {
+        /* {downsampledRoute.length > 1 && (
         <Polyline
-          positions={combinedRoute.map((pt) => [pt.lat, pt.lon])}
+          positions={downsampledRoute.map((pt) => [pt.lat, pt.lon])}
           color="gray"
           weight={2}
-          opacity={0.3}
+          opacity={0}
           dashArray="5,5"
         />
-      )}
+      )} */
+      }
       {segments.map((seg, idx) => {
         const segPoints = seg.points.filter((pt) =>
           currentRoute.find(
@@ -238,20 +352,84 @@ interface Source {
   color: string;
 }
 
+const storeCachedTrajectory = (key: string, data: CombinedPoint[]) => {
+  try {
+    const cacheItem = {
+      data,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(key, JSON.stringify(cacheItem));
+  } catch (error) {
+    console.warn("Failed to cache trajectory data in localStorage:", error);
+  }
+};
+
+const getCachedTrajectory = (key: string): CombinedPoint[] | null => {
+  try {
+    const cacheItem = localStorage.getItem(key);
+    if (!cacheItem) return null;
+
+    const { data, timestamp } = JSON.parse(cacheItem);
+    const isExpired = Date.now() - timestamp > CACHE_EXPIRY_TIME;
+
+    if (isExpired) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.warn("Error retrieving cached trajectory:", error);
+    return null;
+  }
+};
+
 const TrajectoryMap: React.FC = () => {
   const [sources, setSources] = useState<Source[]>([
     {
       id: uuidv4(),
-      name: "Dubai",
+      name: "Abu Dhabi",
       latitude: DEFAULT_LAT,
       longitude: DEFAULT_LON,
-      color: "#1e88e5",
+      color: "#007bff",
+    },
+    {
+      id: uuidv4(),
+      name: "Dubai",
+      latitude: 25.2048,
+      longitude: 55.2708,
+      color: "#dc3545",
+    },
+    {
+      id: uuidv4(),
+      name: "Doha",
+      latitude: 25.276987,
+      longitude: 51.520008,
+      color: "#6610f2",
+    },
+    {
+      id: uuidv4(),
+      name: "Muscat",
+      latitude: 23.5880,
+      longitude: 58.3829,
+      color: "#fd7e14",
+    },
+    {
+      id: uuidv4(),
+      name: "Fujairah",
+      latitude: 25.1288,
+      longitude: 56.3265,
+      color: "#e83e8c",
     },
   ]);
 
   const [trajectoryCache, setTrajectoryCache] = useState<
     Record<string, CombinedPoint[]>
   >({});
+
+  const [downsampledRoutes, setDownsampledRoutes] = useState<{
+    [sourceId: string]: CombinedPoint[];
+  }>({});
 
   const [loadingRoutes, setLoadingRoutes] = useState<
     Record<string, boolean>
@@ -269,48 +447,62 @@ const TrajectoryMap: React.FC = () => {
     sources[0].id,
   );
   const [panelOpen, setPanelOpen] = useState(false);
+  const [samplingRate, setSamplingRate] = useState(SAMPLING_RATE);
 
-  const biggestCities = [
-    { name: "Tokyo", latitude: 35.6895, longitude: 139.6917 },
-    { name: "Delhi", latitude: 28.7041, longitude: 77.1025 },
-    { name: "Shanghai", latitude: 31.2304, longitude: 121.4737 },
-    { name: "São Paulo", latitude: -23.5505, longitude: -46.6333 },
-    { name: "Cairo", latitude: 30.0444, longitude: 31.2357 },
-    { name: "Mumbai", latitude: 19.076, longitude: 72.8777 },
-    { name: "Beijing", latitude: 39.9042, longitude: 116.4074 },
-    { name: "Dhaka", latitude: 23.8103, longitude: 90.4125 },
-    { name: "Osaka", latitude: 34.6937, longitude: 135.5023 },
-    { name: "New York City", latitude: 40.7128, longitude: -74.006 },
-    { name: "Karachi", latitude: 24.8607, longitude: 67.0011 },
-    { name: "Buenos Aires", latitude: -34.6037, longitude: -58.3816 },
-    { name: "Chongqing", latitude: 29.4316, longitude: 106.9123 },
+  const cityCoords = [
+    { name: "Abu Dhabi", latitude: 24.4539, longitude: 54.3773 },
+    { name: "Dubai", latitude: 25.2048, longitude: 55.2708 },
+    { name: "Doha", latitude: 25.2854, longitude: 51.5310 },
+    { name: "Manama", latitude: 26.2285, longitude: 50.5860 },
+    { name: "Kuwait City", latitude: 29.3759, longitude: 47.9774 },
+    { name: "Muscat", latitude: 23.5880, longitude: 58.3829 },
+    { name: "Fujairah", latitude: 25.1288, longitude: 56.3265 },
+    { name: "Ras Al Khaimah", latitude: 25.7895, longitude: 55.9432 },
+    { name: "Jeddah", latitude: 21.4858, longitude: 39.1925 },
+    { name: "Aqaba", latitude: 29.5266, longitude: 35.0078 },
+    { name: "Beirut", latitude: 33.8938, longitude: 35.5018 },
+    { name: "Alexandria", latitude: 31.2001, longitude: 29.9187 },
+    { name: "Port Said", latitude: 31.2565, longitude: 32.2841 },
     { name: "Istanbul", latitude: 41.0082, longitude: 28.9784 },
-    { name: "Kolkata", latitude: 22.5726, longitude: 88.3639 },
-    { name: "Manila", latitude: 14.5995, longitude: 120.9842 },
-    { name: "Lagos", latitude: 6.5244, longitude: 3.3792 },
+    { name: "Antalya", latitude: 36.8969, longitude: 30.7133 },
+    { name: "Aden", latitude: 12.7797, longitude: 45.0095 },
+    { name: "Dammam", latitude: 26.4344, longitude: 50.1033 },
+    { name: "Basra", latitude: 30.5085, longitude: 47.7804 },
+    { name: "Latakia", latitude: 35.5384, longitude: 35.7959 },
+    { name: "Madrid", latitude: 40.4168, longitude: -3.7038 },
+    { name: "Barcelona", latitude: 41.3851, longitude: 2.1734 },
+    { name: "Marseille", latitude: 43.2965, longitude: 5.3698 },
+    { name: "New York City", latitude: 40.7128, longitude: -74.0060 },
+    { name: "Miami", latitude: 25.7617, longitude: -80.1918 },
     { name: "Rio de Janeiro", latitude: -22.9068, longitude: -43.1729 },
-    { name: "Tianjin", latitude: 39.3434, longitude: 117.3616 },
-    { name: "Kinshasa", latitude: -4.4419, longitude: 15.2663 },
-    { name: "Guangzhou", latitude: 23.1291, longitude: 113.2644 },
-    { name: "Lima", latitude: -12.0464, longitude: -77.0428 },
-    { name: "Bangkok", latitude: 13.7563, longitude: 100.5018 },
-    { name: "Chennai", latitude: 13.0827, longitude: 80.2707 },
-    { name: "Hyderabad", latitude: 17.385, longitude: 78.4867 },
-    { name: "Wuhan", latitude: 30.5928, longitude: 114.3055 },
-    { name: "Hangzhou", latitude: 30.2741, longitude: 120.1551 },
-    { name: "Ahmedabad", latitude: 23.0225, longitude: 72.5714 },
-    { name: "Kuala Lumpur", latitude: 3.139, longitude: 101.6869 },
+    { name: "Lisbon", latitude: 38.7223, longitude: -9.1393 },
+    { name: "Singapore", latitude: 1.3521, longitude: 103.8198 },
+    { name: "Sydney", latitude: -33.8688, longitude: 151.2093 },
+    { name: "Tokyo", latitude: 35.6762, longitude: 139.6503 },
   ];
 
-  const [selectedCity, setSelectedCity] = useState(biggestCities[0].name);
+  const [selectedCity, setSelectedCity] = useState(cityCoords[0].name);
 
   const mapRef = useRef<L.Map | null>(null);
 
   const fetchTrajectoryForSource = async (src: Source) => {
     const coordKey = `${src.latitude},${src.longitude}`;
+    const localStorageKey = `trajectory_${coordKey}`;
 
     if (trajectoryCache[coordKey]) {
       return trajectoryCache[coordKey];
+    }
+
+    const cachedData = getCachedTrajectory(localStorageKey);
+    if (cachedData) {
+      console.log(
+        `Retrieved trajectory from localStorage cache for ${src.name}`,
+      );
+      setTrajectoryCache((prev) => ({
+        ...prev,
+        [coordKey]: cachedData,
+      }));
+      return cachedData;
     }
 
     setLoadingRoutes((prev) => ({ ...prev, [src.id]: true }));
@@ -329,6 +521,13 @@ const TrajectoryMap: React.FC = () => {
         ...prev,
         [coordKey]: route,
       }));
+
+      console.log(`Caching trajectory data for ${src.name} in localStorage`);
+      storeCachedTrajectory(localStorageKey, route);
+
+      console.log(
+        `Fetched and cached new trajectory data for ${src.name} (${route.length} points)`,
+      );
       return route;
     } catch (err: any) {
       setError(err.message || "Failed to fetch trajectory data");
@@ -337,6 +536,16 @@ const TrajectoryMap: React.FC = () => {
       setLoadingRoutes((prev) => ({ ...prev, [src.id]: false }));
     }
   };
+
+  useEffect(() => {
+    const newDownsampledRoutes: { [sourceId: string]: CombinedPoint[] } = {};
+
+    Object.entries(combinedRoutes).forEach(([sourceId, route]) => {
+      newDownsampledRoutes[sourceId] = downsamplePoints(route, samplingRate);
+    });
+
+    setDownsampledRoutes(newDownsampledRoutes);
+  }, [combinedRoutes, samplingRate]);
 
   const fetchAllTrajectories = async () => {
     setError(null);
@@ -380,7 +589,7 @@ const TrajectoryMap: React.FC = () => {
         }
         return newFrames;
       });
-    }, 50);
+    });
     return () => clearInterval(intervalId);
   }, [sources, combinedRoutes]);
 
@@ -495,6 +704,19 @@ const TrajectoryMap: React.FC = () => {
     }
   };
 
+  const clearAllCaches = () => {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("trajectory_")) {
+        localStorage.removeItem(key);
+      }
+    }
+
+    setTrajectoryCache({});
+
+    alert("All trajectory caches cleared");
+  };
+
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden bg-slate-50">
       <div
@@ -509,23 +731,31 @@ const TrajectoryMap: React.FC = () => {
             <h3 className="font-semibold text-lg text-slate-800">
               Manage Sources
             </h3>
-            <button
-              onClick={() => setPanelOpen(false)}
-              className="text-slate-500 hover:text-slate-700"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+            <div className="flex space-x-2">
+              <button
+                onClick={clearAllCaches}
+                className="px-3 py-1 bg-orange-500 text-white rounded-md text-sm hover:bg-orange-600 transition-colors"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M14.293 5.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414L10 8.586l4.293-4.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
+                Clear Cache
+              </button>
+              <button
+                onClick={() => setPanelOpen(false)}
+                className="text-slate-500 hover:text-slate-700"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M14.293 5.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414L10 8.586l4.293-4.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -637,7 +867,7 @@ const TrajectoryMap: React.FC = () => {
                   onChange={(e) => setSelectedCity(e.target.value)}
                   className="p-2 border border-slate-300 rounded text-sm"
                 >
-                  {biggestCities.map((city) => (
+                  {cityCoords.map((city) => (
                     <option key={city.name} value={city.name}>
                       {city.name}
                     </option>
@@ -645,7 +875,7 @@ const TrajectoryMap: React.FC = () => {
                 </select>
                 <button
                   onClick={() => {
-                    const city = biggestCities.find(
+                    const city = cityCoords.find(
                       (c) => c.name === selectedCity,
                     );
                     if (city) {
@@ -816,7 +1046,17 @@ const TrajectoryMap: React.FC = () => {
             />
             {sources.map((src) => {
               const route = combinedRoutes[src.id];
+              const downsampledRoute = downsampledRoutes[src.id] || [];
               const shouldFollow = activeFollowSourceId === src.id;
+
+              const totalPoints = route?.length || 0;
+              const sampledPoints = downsampledRoute?.length || 0;
+              const pointsInfo = totalPoints > 0
+                ? `${sampledPoints}/${totalPoints} points (${
+                  Math.round((sampledPoints / totalPoints) * 100)
+                }%)`
+                : "No data";
+
               return (
                 <React.Fragment key={src.id}>
                   {loadingRoutes[src.id]
@@ -834,10 +1074,12 @@ const TrajectoryMap: React.FC = () => {
                     )
                     : (
                       route &&
-                      route.length > 0 && (
+                      route.length > 0 && downsampledRoute &&
+                      downsampledRoute.length > 0 && (
                         <TrajectoryPathRenderer
                           animationFrame={animationFrames[src.id] || 0}
                           combinedRoute={route}
+                          downsampledRoute={downsampledRoute}
                           sourceColor={src.color}
                           shouldFollow={shouldFollow}
                         />
@@ -846,7 +1088,11 @@ const TrajectoryMap: React.FC = () => {
                   <Marker
                     position={[src.latitude, src.longitude]}
                     icon={icon}
-                  />
+                  >
+                    <Tooltip direction="top">
+                      <span>{src.name}: {pointsInfo}</span>
+                    </Tooltip>
+                  </Marker>
                 </React.Fragment>
               );
             })}
