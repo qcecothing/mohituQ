@@ -38,9 +38,6 @@ export type CombinedPoint = {
   segment: TrajectorySegment;
 };
 
-// -----------------------------------------------------------------------------
-// Updated getCombinedPath - now accepts sourceLat and sourceLon so that the
-// generated route starts from the actual source's coordinates.
 const getCombinedPath = (
   trajectoryData: TrajectoryData | null,
   sourceLat: number,
@@ -307,7 +304,6 @@ const TrajectoryMap: React.FC = () => {
 
   const [selectedCity, setSelectedCity] = useState(biggestCities[0].name);
 
-  // Create a ref to hold the Leaflet map instance.
   const mapRef = useRef<L.Map | null>(null);
 
   const fetchTrajectoryForSource = async (src: Source) => {
@@ -414,7 +410,6 @@ const TrajectoryMap: React.FC = () => {
     }
   };
 
-  // Center function that centers the map on the currently followed source.
   const centerMap = () => {
     if (!mapRef.current) return;
     const source = sources.find(
@@ -502,9 +497,8 @@ const TrajectoryMap: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden bg-slate-50">
-      {/* Top Collapsible Panel */}
       <div
-        className="bg-white shadow-sm transition-all duration-300 overflow-hidden"
+        className="bg-white shadow-sm transition-all duration-300 overflow-y-scroll"
         style={{
           height: panelOpen ? "auto" : "0",
           maxHeight: panelOpen ? "60vh" : "0",
@@ -534,7 +528,6 @@ const TrajectoryMap: React.FC = () => {
             </button>
           </div>
 
-          {/* Existing source editors */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {sources.map((src) => (
               <div
@@ -618,7 +611,6 @@ const TrajectoryMap: React.FC = () => {
               </div>
             ))}
 
-            {/* Add new source manually */}
             <div className="bg-neutral-200 rounded-lg flex flex-col justify-center items-center p-4">
               <button
                 onClick={() => addSource()}
@@ -639,7 +631,6 @@ const TrajectoryMap: React.FC = () => {
                 Add Source Manually
               </button>
 
-              {/* Add new source from Biggest Cities */}
               <div className="flex flex-col items-center space-y-2">
                 <select
                   value={selectedCity}
@@ -675,7 +666,6 @@ const TrajectoryMap: React.FC = () => {
         </div>
       </div>
 
-      {/* Header */}
       <div className="bg-white p-3 shadow-sm border-b border-slate-200">
         <div className="flex justify-between items-center">
           <button
@@ -730,7 +720,6 @@ const TrajectoryMap: React.FC = () => {
           </select>
 
           <div className="flex items-center space-x-4">
-            {/* New Center Button */}
             <button
               onClick={centerMap}
               className="p-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 focus:outline-none"
@@ -812,7 +801,6 @@ const TrajectoryMap: React.FC = () => {
         </div>
       </div>
 
-      {/* Map Area */}
       <div className="flex-1 relative">
         <div className="h-full w-full">
           <MapContainer
@@ -831,7 +819,6 @@ const TrajectoryMap: React.FC = () => {
               const shouldFollow = activeFollowSourceId === src.id;
               return (
                 <React.Fragment key={src.id}>
-                  {/* If this source's trajectory is still loading, show spinner marker */}
                   {loadingRoutes[src.id]
                     ? (
                       <Marker
