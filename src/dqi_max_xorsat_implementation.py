@@ -305,7 +305,7 @@ class DQIMaxXORSAT:
         else:
             plt.show()
             
-    def export_results(self, results, output_dir='src'):
+    def export_results(self, results, output_dir='outputs'):
         """
         Export the results to files.
         
