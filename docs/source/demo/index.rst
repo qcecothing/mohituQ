@@ -9,8 +9,8 @@ This section contains demonstration resources for understanding and visualizing 
    :maxdepth: 2
    :caption: Demo Contents:
 
-   Hardcoding_maxxorsat.ipynb
-   decoding.ipynb
+   Hardcoding_maxxorsat
+   decoding
    performance_visualizations
 
 Jupyter Notebooks
