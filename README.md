@@ -1,23 +1,23 @@
 # **mohituQ** **محيطك** <img src="docs/source/_static/images/mohituq_logo.png" alt="mohituQ Logo" width="60" align="right"/>
 
-Quantum Optimization for Ocean Plastic Cleanup
+**Quantum Optimization for Ocean Plastic Cleanup**<br>
 mohituQ is an open-source project focused on leveraging quantum algorithms-specifically Decoded Quantum Interferometry (DQI)-to optimize the placement and routing of trash-collection systems for cleaning up ocean plastic. Inspired by initiatives like The Ocean Cleanup, Plastic Odyssey, and WWF Oceans, this repository aims to accelerate environmental impact through advanced computational techniques.
 
-🌊 Project Goals
-Model the logistical challenge of ocean plastic collection as a large-scale optimization problem.
+🌊 **Project Goals**<br>
+- Model the logistical challenge of ocean plastic collection as a large-scale optimization problem.
 
-Implement quantum-inspired and classical algorithms (DQI, QAOA, and others) to find optimal or near-optimal solutions for net placement and collection routes.
+- Implement quantum-inspired and classical algorithms (DQI, QAOA, and others) to find optimal or near-optimal solutions for net placement and collection routes.
 
-Support open science and environmental sustainability by providing transparent, reproducible code and data.
+- Support open science and environmental sustainability by providing transparent, reproducible code and data.
 
-🚀 Features
-Mathematical formulations for multi-objective optimization (maximize plastic collected, minimize environmental impact, etc.)
+🚀 **Features**<br>
+- Mathematical formulations for multi-objective optimization (maximize plastic collected, minimize environmental impact, etc.)
 
-Example implementations of DQI and comparative classical algorithms
+- Example implementations of DQI and comparative classical algorithms
 
-Tools for simulating ocean plastic distribution and evaluating cleanup strategies
+- Tools for simulating ocean plastic distribution and evaluating cleanup strategies
 
-Extensible framework for integrating real-world data and collaborating with citizen science initiatives
+- Extensible framework for integrating real-world data and collaborating with citizen science initiatives
 
 📦 Installation
 bash
@@ -40,7 +40,7 @@ python run_optimization.py --config configs/sample_config.yaml
 python visualize.py --input results/sample_output.json
 See the examples directory for more use cases and sample scripts.
 
-📖 Documentation
+📖 **Documentation** <br>
 
 **Full documentation:** https://qcecothing.github.io/mohituQ/
 
@@ -50,18 +50,20 @@ docs/dqi.md: Details on Decoded Quantum Interferometry
 
 docs/api.md: API reference
 
-🤝 **Contributing:**
+#### 🤝 **Contributing**
 We welcome contributions! Please see CONTRIBUTING.md for guidelines on how to get started, report issues, or submit pull requests. All contributors are expected to follow our Code of Conduct.
 
-🛡️ **Security:**
+#### 🛡️ **Security**
 If you discover a security vulnerability, please see SECURITY.md for instructions on responsible disclosure.
 
-🌍 **Acknowledgments:**
+#### 🌍 **Acknowledgments**
 Inspired by The Ocean Cleanup, Plastic Odyssey, and WWF Oceans
 
-⚛️ **Quantum algorithm references:** [Decoded Quantum Interferometry (DQI)](https://arxiv.org/abs/2408.08292), [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/2306.09198)
+#### ⚛️ **Quantum algorithm references** <br>
+- [Decoded Quantum Interferometry (DQI)](https://arxiv.org/abs/2408.08292) 
+- [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/2306.09198)
 
-🌏 UN Sustainable Development Goals
+🌏 **UN Sustainable Development Goals:** <br>
 This project contributes to the following United Nations Sustainable Development Goals:
 
 - **SDG 3 - Good health and well-being**: Cleaning oceans safeguards human health by reducing exposure to marine pollutants in seafood and coastal waters.
@@ -71,7 +73,7 @@ This project contributes to the following United Nations Sustainable Development
 - **SDG 14 - Life Below Water**: By directly addressing ocean plastic pollution that threatens marine ecosystems and biodiversity.
 - **SDG 17 - Partnerships for Goals**: By fostering open collaboration between quantum computing experts, marine conservationists, and the global community.
 
-📢 **License:**
+📢 **License**
 This project is licensed under the MIT License. See LICENSE for details.
 
 Let's use open source and quantum computing to help restore our oceans!
